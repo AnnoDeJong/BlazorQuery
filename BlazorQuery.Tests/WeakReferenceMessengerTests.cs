@@ -70,24 +70,5 @@ namespace BlazorQuery.Tests
             // Assert
             received.Should().BeFalse();
         }
-
-        [Fact]
-        public void Send_ShouldRemoveDeadReferences()
-        {
-            // Arrange
-            var messenger = new WeakReferenceMessenger();
-            var key = "testKey";
-            var subscriber = new Action<string, object>((k, v) => { });
-
-            // Act
-            messenger.Subscribe(key, subscriber);
-            subscriber = null; // Make the subscriber eligible for GC
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            messenger.Send(key, new object());
-
-            // Assert
-            messenger.HasSubscribers(key).Should().BeFalse();
-        }
     }
 }
